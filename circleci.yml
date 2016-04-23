@@ -6,8 +6,7 @@ machine:
 
   # Version of ruby to use
   node:
-    version:
-      5.10.1
+    version: 5.10.1
 
   # Add some environment variables
   environment:

@@ -4,8 +4,8 @@ const EventEmitter = require('events').EventEmitter;
 
 /**
  * Queue object extending the EventEmitter class.
- * @class Queue
  *
+ * @alias Queue
  * @constructor
  *
  * @param {Object} options EventEmitter object configuration
@@ -19,7 +19,9 @@ class Queue extends EventEmitter {
   }
 
   /**
-   * Connect the queue.d
+   * Connect the queue.
+   *
+   * @return {Promise} - True when connected
    */
   connect() {
     return Promise.resolve(true);

@@ -1,3 +1,4 @@
+'use strict';
 
 const tv4 = require('tv4');
 
@@ -25,8 +26,10 @@ class Validator {
     // Get the object schema:
     const schema = this.getSchema(obj);
 
+    const json = typeof obj.toJSON === 'function' ? obj.toJSON() : obj;
+
     // Validate the object against its schema:
-    const isValid = this.tv4.validate(obj.toJSON(), schema);
+    const isValid = this.tv4.validate(json, schema);
 
     // Attach the validation error to the object if supported:
     // console.error(this.tv4.error);

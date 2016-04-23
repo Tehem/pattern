@@ -1,4 +1,6 @@
 {
   "extends": "eslint-config-airbnb",
-  "rules" : {}
+  "rules" : {
+    "strict": 0
+  }
 }

@@ -7,7 +7,12 @@
     "test": "test"
   },
   "scripts": {
-    "test": "npm test"
+    "test": "npm run eslint && npm run istanbul && npm run doc",
+    "eslint": "./node_modules/eslint/bin/eslint.js .",
+    "istanbul": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --include-all-sources --root ./src",
+    "mocha": "./node_modules/mocha/bin/_mocha",
+    "doc": "./node_modules/jsdoc/jsdoc.js --configure .jsdoc.json -R README.md -u ./doc/tutorials -d ./doc --package ./package.json ./src",
+    "build": "npm install --dev && npm run test"
   },
   "repository": {
     "type": "git",
@@ -23,5 +28,21 @@
   "bugs": {
     "url": "https://github.com/GillesRasigade/pattern/issues"
   },
-  "homepage": "https://github.com/GillesRasigade/pattern#readme"
+  "homepage": "https://github.com/GillesRasigade/pattern#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "co-mocha": "^1.1.2",
+    "eslint": "^2.8.0",
+    "eslint-config-airbnb": "^8.0.0",
+    "eslint-plugin-import": "^1.5.0",
+    "eslint-plugin-jsx-a11y": "^1.0.2",
+    "eslint-plugin-react": "^5.0.1",
+    "istanbul": "^0.4.3",
+    "jsdoc": "^3.4.0",
+    "minami": "^1.1.1",
+    "mocha": "^2.4.5"
+  },
+  "dependencies": {
+    "tv4": "^1.2.7"
+  }
 }

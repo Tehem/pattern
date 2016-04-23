@@ -1,0 +1,24 @@
+## Customize the test machine
+machine:
+
+  timezone:
+    Europe/Paris # Set the timezone
+
+  # Version of ruby to use
+  node:
+    version:
+      5.10.1
+
+  # Add some environment variables
+  environment:
+    CIRCLE_ENV: test
+
+dependencies:
+  override:
+    - npm install --dev
+
+## Customize test commands
+test:
+  override:
+    - npm run eslint
+    - npm run istanbul

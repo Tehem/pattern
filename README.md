@@ -18,6 +18,11 @@ npm install -S @gilles.rasigade/pattern
 const pattern = require('@gilles.rasigade/pattern');
 ```
 
+### Documentation
+
+You can find the documentation of the project at the following url:
+http://gillesrasigade.github.io/pattern/doc/index.html
+
 ## Contribute
 
 ### Clone and build the code

@@ -1,6 +1,6 @@
 {
   "name": "@gilles.rasigade/pattern",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Useful patterns for NodeJS development",
   "main": "index.js",
   "directories": {

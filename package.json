@@ -1,5 +1,5 @@
 {
-  "name": "pattern",
+  "name": "@gilles.rasigade/pattern",
   "version": "1.0.0",
   "description": "Useful patterns for NodeJS development",
   "main": "index.js",

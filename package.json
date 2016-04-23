@@ -1,0 +1,27 @@
+{
+  "name": "pattern",
+  "version": "1.0.0",
+  "description": "Useful patterns for NodeJS development",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GillesRasigade/pattern.git"
+  },
+  "keywords": [
+    "Design",
+    "Pattern",
+    "NodeJS"
+  ],
+  "author": "Gilles Rasigade",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GillesRasigade/pattern/issues"
+  },
+  "homepage": "https://github.com/GillesRasigade/pattern#readme"
+}

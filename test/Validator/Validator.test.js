@@ -1,4 +1,4 @@
-const Validator = require(`${process.env.PWD}/src/Validator/Validator`);
+const Validator = require('../../src/Validator/Validator');
 
 const schema = {
   type: 'object',

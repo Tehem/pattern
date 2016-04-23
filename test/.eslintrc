@@ -1,0 +1,12 @@
+{
+  "extends": "eslint-config-airbnb",
+  "globals": {
+    "describe": true,
+    "it": true,
+    "expect": true
+  },
+  "rules": {
+    "no-underscore-dangle": 0,
+    "no-unused-expressions": 0
+  }
+}

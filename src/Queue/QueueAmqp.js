@@ -77,7 +77,7 @@ class QueueAmqp extends Queue {
    */
   onClose() {
     const self = this;
-    return co(function* () {
+    return co(function* onClose() {
       self.close();
       yield self.connect();
       return true;
@@ -104,7 +104,7 @@ class QueueAmqp extends Queue {
    */
   connect() {
     const self = this;
-    return co(function* () {
+    return co(function* connect() {
       if (self._options.rx) {
         // Connect to the queues:
         self.rx = yield amqp.connect(self._options.rx);

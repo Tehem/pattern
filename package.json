@@ -41,7 +41,8 @@
     "istanbul": "^0.4.3",
     "jsdoc": "^3.4.0",
     "minami": "^1.1.1",
-    "mocha": "^2.4.5"
+    "mocha": "^2.4.5",
+    "sinon": "^1.17.3"
   },
   "dependencies": {
     "amqplib": "^0.4.1",

@@ -62,6 +62,7 @@ class QueueAmqp extends Queue {
       this._options.tx = RABBITMQ_BIGWIG_TX_URL;
     }
 
+
     this.name = this._options.name || 'queue';
 
     this._options.queue = this._options.queue || {};
@@ -132,7 +133,8 @@ class QueueAmqp extends Queue {
    *
    * @return {QueueAmqp} - The queue to be closed
    */
-  emit(topic, ...args) {
+  emit(topic) {
+    const args = Array.from(arguments).slice(1); // eslint-disable-line prefer-rest-params
     const msg = JSON.stringify(args);
     this.txChannel.bindQueue(this.name, this.name, topic);
     this.txChannel.publish(this.name, topic,

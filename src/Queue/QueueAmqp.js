@@ -20,6 +20,16 @@ const RABBITMQ_BIGWIG_RX_URL = process.env.RABBITMQ_BIGWIG_RX_URL;
 const RABBITMQ_BIGWIG_TX_URL = process.env.RABBITMQ_BIGWIG_TX_URL;
 
 /**
+ * Channel types RX / TX
+ * @enum {string}
+ *
+ */
+const TYPES = {
+  RX: 'rx',
+  TX: 'tx',
+};
+
+/**
  * Queue over AMQP
  *
  * @alias QueueAmqp
@@ -98,6 +108,28 @@ class QueueAmqp extends Queue {
   }
 
   /**
+   * continueect a Rx / Tx queue
+   * @param  {TYPES} type Rx or Tx type for the channel
+   * @return {QueueAmqp}      [description]
+   */
+  * connectRxTx(TYPE) {
+    const type = TYPES[TYPE];
+    if (this._options[type]) {
+      // Connect to the queues:
+      this[type] = yield amqp.connect(this._options[type]);
+      // Create the channels:
+      this[`${type}Channel`] = yield this[type].createChannel();
+      // Assert queue to exists:
+      this[`${type}Channel`].assertQueue(this.name, this._options.queue);
+      // Assert exchange definition:
+      this[`${type}Channel`].assertExchange(this.name, this._options.type, this._options.exchange);
+      // If the connection close:
+      this[`${type}Channel`].on('close', this.onClose);
+    }
+    return this;
+  }
+
+  /**
    * Connect the AMQP queue.
    *
    * @return {Promise} - True when connected
@@ -105,25 +137,8 @@ class QueueAmqp extends Queue {
   connect() {
     const self = this;
     return co(function* connect() {
-      if (self._options.rx) {
-        // Connect to the queues:
-        self.rx = yield amqp.connect(self._options.rx);
-        // Create the channels:
-        self.rxChannel = yield self.rx.createChannel();
-        // Assert queue to exists:
-        self.rxChannel.assertQueue(self.name, self._options.queue);
-        // Assert exchange definition:
-        self.rxChannel.assertExchange(self.name, self._options.type, self._options.exchange);
-        // If the connection close:
-        self.rxChannel.on('close', self.onClose);
-      }
-      if (self._options.tx) {
-        self.tx = yield amqp.connect(self._options.tx);
-        self.txChannel = yield self.tx.createChannel();
-        self.txChannel.assertQueue(self.name, self._options.queue);
-        self.txChannel.assertExchange(self.name, self._options.type, self._options.exchange);
-        self.txChannel.on('close', self.onClose);
-      }
+      yield self.connectRxTx('RX');
+      yield self.connectRxTx('TX');
       return true;
     });
   }
@@ -138,8 +153,9 @@ class QueueAmqp extends Queue {
     const msg = JSON.stringify(args);
     this.txChannel.bindQueue(this.name, this.name, topic);
     this.txChannel.publish(this.name, topic,
-      new Buffer(msg),
-      { persistent: true }
+      new Buffer(msg), {
+        persistent: true,
+      }
     );
     return this;
   }

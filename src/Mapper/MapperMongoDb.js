@@ -3,9 +3,27 @@
 const mongodb = require('mongodb');
 const co = require('co');
 
-const MapperAbstract = require('./MapperAbstract');
+const Mapper = require('./Mapper');
 
-class MapperMongoDb extends MapperAbstract {
+/**
+ * MongoDb mapper
+ *
+ * @alias MapperMongoDb
+ * @constructor
+ *
+ * @param {Object} options - Queue configuration
+ *
+ * @example
+ *
+ * const MapperMongoDb = require('MapperMongoDb');
+ *
+ * const mapper = new MapperMongoDb();
+ *
+ * yield mapper.connect();
+ *
+ * const user = mapper.getObject(_id, User);
+ */
+class MapperMongoDb extends Mapper {
   constructor(options) {
     super(options);
 
@@ -13,10 +31,21 @@ class MapperMongoDb extends MapperAbstract {
     this.options.url = this.options.url || 'mongodb://localhost:27017/test';
   }
 
+  /**
+   * Connect the database
+   *
+   * @return {MapperMongoDb} - The database mapper
+   */
   * connect() {
     this.connection = yield mongodb.connect(this.options.url);
     return this;
   }
+
+  /**
+   * Close the database
+   *
+   * @return {MapperMongoDb} - The database mapper
+   */
   * close() {
     if (this.connection) {
       this.connection.close();
@@ -25,6 +54,12 @@ class MapperMongoDb extends MapperAbstract {
     return this;
   }
 
+  /**
+   * Retrieve the object collection name from the object given in parameter, the
+   * constructor or prototype.
+   *
+   * @return {String} - The collection name
+   */
   getObjectCollectionName(obj) {
     // Get the constructor name:
     let name = null;
@@ -44,12 +79,23 @@ class MapperMongoDb extends MapperAbstract {
     return name;
   }
 
+  /**
+   * Retrieve the object collection.
+   *
+   * @return {Object} - The collection for this object
+   */
   getObjectCollection(obj) {
     return this.connection.collection(
       this.getObjectCollectionName(obj)
     );
   }
 
+  /**
+   * Save an object to the mongoDb database.
+   *
+   * @param {Object} - Object to persist to the database
+   * @return {Object} - New instance of the object
+   */
   saveObject(obj) {
     const self = this;
     return co(function* saveObject() {
@@ -74,6 +120,14 @@ class MapperMongoDb extends MapperAbstract {
     });
   }
 
+  /**
+   * Load an object from the mongoDb database.
+   *
+   * @param {String|ObjectId} _id - Object _id to search for
+   * @param {Contructor} constructor - Constructor to use to instanciate the
+   *                                   object
+   * @return {Object} - Instance
+   */
   getObject(_id, constructor) {
     const self = this;
     return co(function* getObject() {
@@ -99,6 +153,12 @@ class MapperMongoDb extends MapperAbstract {
     });
   }
 
+  /**
+   * Remove an object from the mongoDb database.
+   *
+   * @param {Object} - Object to delete from the database
+   * @return {Object} - Instance
+   */
   deleteObject(obj) {
     const self = this;
     return co(function* deleteObject() {

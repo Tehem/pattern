@@ -52,7 +52,7 @@ class MapperMongoDb extends MapperAbstract {
 
   saveObject(obj) {
     const self = this;
-    return co(function* () {
+    return co(function* saveObject() {
       // Get the object data:
       const data = obj.toJSON();
 
@@ -76,7 +76,7 @@ class MapperMongoDb extends MapperAbstract {
 
   getObject(_id, constructor) {
     const self = this;
-    return co(function* () {
+    return co(function* getObject() {
       let objectId = _id;
       // Map the Mongodb _id to ObjectId:
       if (typeof objectId === 'string') {
@@ -101,7 +101,7 @@ class MapperMongoDb extends MapperAbstract {
 
   deleteObject(obj) {
     const self = this;
-    return co(function* () {
+    return co(function* deleteObject() {
       const data = obj.toJSON();
       // Map the Mongodb _id to ObjectId:
       data._id = mongodb.ObjectId(data._id); // eslint-disable-line new-cap

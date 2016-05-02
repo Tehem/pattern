@@ -11,16 +11,23 @@ const Mapper = require('./Mapper');
  * @alias MapperMongoDb
  * @constructor
  *
+ * @see Mapper
+ *
  * @param {Object} options - Queue configuration
+ * @param {String} [options.url=mongodb://localhost:27017/test] - AMQP Read Channel URL
  *
  * @example
  *
+ * // Require the mapper class:
  * const MapperMongoDb = require('MapperMongoDb');
  *
+ * // Instanciate the mapper with default values:
  * const mapper = new MapperMongoDb();
  *
+ * // Connect the database:
  * yield mapper.connect();
  *
+ * // Perform tasks such as loading objects:
  * const user = mapper.getObject(_id, User);
  */
 class MapperMongoDb extends Mapper {

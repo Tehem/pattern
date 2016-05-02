@@ -7,11 +7,12 @@
     "after": true,
     "describe": true,
     "it": true,
-    "expect": true,
-    "sinon": true
+    "sinon": true,
+    "expect": true
   },
   "rules": {
     "no-underscore-dangle": 0,
-    "no-unused-expressions": 0
+    "no-unused-expressions": 0,
+    "strict": 0
   }
 }

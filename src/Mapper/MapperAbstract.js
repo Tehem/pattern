@@ -6,7 +6,7 @@ class MapperAbstract extends MapperInterface {
   constructor(options) {
     super(options);
 
-    this.options = options;
+    this.options = options || {};
   }
 }
 

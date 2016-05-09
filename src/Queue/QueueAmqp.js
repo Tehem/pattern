@@ -21,10 +21,12 @@ const RABBITMQ_BIGWIG_TX_URL = process.env.RABBITMQ_BIGWIG_TX_URL;
 
 /**
  * Channel types RX / TX
- * @enum {string}
+ * * RX: consumer
+ * * TX: publisher
  *
+ * @enum {string}
  */
-const TYPES = {
+const QUEUE_AMQP_CHANNEL_TYPES = {
   RX: 'rx',
   TX: 'tx',
 };
@@ -109,11 +111,11 @@ class QueueAmqp extends Queue {
 
   /**
    * continueect a Rx / Tx queue
-   * @param  {TYPES} type Rx or Tx type for the channel
+   * @param  {QUEUE_AMQP_CHANNEL_TYPES} type Rx or Tx type for the channel
    * @return {QueueAmqp}      [description]
    */
   * connectRxTx(TYPE) {
-    const type = TYPES[TYPE];
+    const type = QUEUE_AMQP_CHANNEL_TYPES[TYPE];
     if (this._options[type]) {
       // Connect to the queues:
       this[type] = yield amqp.connect(this._options[type]);

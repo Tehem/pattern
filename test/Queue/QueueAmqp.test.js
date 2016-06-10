@@ -1,3 +1,5 @@
+'use strict';
+
 const QueueAmqp = require('../../src/Queue/QueueAmqp');
 
 const EventEmitter = require('events').EventEmitter;
@@ -110,6 +112,69 @@ describe('QueueAmqp', () => {
       const result = yield queue.onClose();
 
       expect(result).to.be.eql(true);
+    });
+  });
+
+  describe('integration', () => {
+    before(() => {
+      sandbox.restore();
+    });
+
+    it('allows to broadcast messages to multiple consumers', function* it(done) {
+      const queue = new QueueAmqp({
+        tx: 'amqp://localhost',
+        type: 'fanout',
+        queue: {
+          name: '',
+          autoDelete: true,
+        },
+        exchange: {
+          durable: false,
+        },
+      });
+      yield queue.connect();
+
+      const alice = new QueueAmqp({
+        rx: 'amqp://localhost',
+        type: 'fanout',
+        queue: {
+          name: '',
+          autoDelete: true,
+        },
+        exchange: {
+          durable: false,
+        },
+      });
+      yield alice.connect();
+
+      const bernard = new QueueAmqp({
+        rx: 'amqp://localhost',
+        type: 'fanout',
+        queue: {
+          name: '',
+          autoDelete: true,
+        },
+        exchange: {
+          durable: false,
+        },
+      });
+      yield bernard.connect();
+
+      let cpt = 0;
+      const receive = () => {
+        cpt++;
+        if (cpt === 2) {
+          done();
+        }
+      };
+
+      alice.on('task', receive);
+      bernard.on('task', receive);
+
+      setTimeout(() => {
+        queue.rxChannel = queue.txChannel;
+        queue.emit('task', 'message');
+      }, 100);
     });
   });
 });

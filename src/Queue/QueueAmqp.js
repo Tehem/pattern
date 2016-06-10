@@ -82,6 +82,18 @@ class QueueAmqp extends Queue {
     this._options.exchange = this._options.exchange || {};
   }
 
+  get queueName() {
+    return this._options.queue.name !== undefined ? this._options.queue.name : this.name;
+  }
+
+  get exchangeName() {
+    return this._options.exchange.name !== undefined ? this._options.exchange.name : this.name;
+  }
+
+  get type() {
+    return this._options.type;
+  }
+
   /**
    * On close event emission from AMQP for automatic reconnect.
    *
@@ -122,9 +134,10 @@ class QueueAmqp extends Queue {
       // Create the channels:
       this[`${type}Channel`] = yield this[type].createChannel();
       // Assert queue to exists:
-      this[`${type}Channel`].assertQueue(this.name, this._options.queue);
+      this[`${type}Channel`].assertQueue(this.queueName, this._options.queue);
       // Assert exchange definition:
-      this[`${type}Channel`].assertExchange(this.name, this._options.type, this._options.exchange);
+      this[`${type}Channel`].assertExchange(
+        this.exchangeName, this._options.type, this._options.exchange);
       // If the connection close:
       this[`${type}Channel`].on('close', this.onClose);
     }
@@ -153,8 +166,8 @@ class QueueAmqp extends Queue {
   emit(topic) {
     const args = Array.from(arguments).slice(1); // eslint-disable-line prefer-rest-params
     const msg = JSON.stringify(args);
-    this.txChannel.bindQueue(this.name, this.name, topic);
-    this.txChannel.publish(this.name, topic,
+    this.txChannel.bindQueue(this.queueName, this.exchangeName, topic);
+    this.txChannel.publish(this.exchangeName, topic,
       new Buffer(msg), {
         persistent: true,
       }
@@ -168,8 +181,8 @@ class QueueAmqp extends Queue {
    * @return {QueueAmqp} - The queue to be closed
    */
   on(topic, func) {
-    this.rxChannel.bindQueue(this.name, this.name, topic);
-    this.rxChannel.consume(this.name, msg => {
+    this.rxChannel.bindQueue(this.queueName, this.exchangeName, topic);
+    this.rxChannel.consume(this.queueName, msg => {
       // @todo REMOVE
       this.rxChannel.ack(msg);
       const message = msg.content.toString();
